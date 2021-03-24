@@ -1,0 +1,85 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canada COVID Information</title>
+    <link rel="stylesheet" href="./index.css">
+</head>
+<body>
+    <div class = "header">
+        <div class = "logo"><h2>COVID Canada</h2></div>
+    </div>
+
+    <div class = "inputs">
+        <div>
+            <label class="locationLabel" for="location">Location "ON", "canada", "AB"</label>
+            <input id="location" class="location"type="text" value="ON">
+        </div>
+        <div>
+            <label class="dateLabel" for="date">Date: "DD-MM-YYYY" (blank for most recent)</label>
+            <input id="date"class="date" type="text" value="21-03-2021">
+        </div>
+        <div>
+            <button class="getData" onclick="getData()">Get Data</button>
+        </div>
+    </div>
+
+    <div class = "info"><h1 id="infom">COVID Info on location as of date</h1></div>
+
+    <div class = "cases">
+        <div class = "first">
+            <div><h1>New Cases Today</h1> <h2 id="casesToday">51</h1></div>
+            <div><h1>Active Cases</h1> <h2 id="activeCases">123,456</h1></div>
+            <div><h1>Cumulative Cases</h1> <h2 id="cumCases">111,111</h2> </div>
+        </div>
+
+        <div class = "second">
+            <div><h1>Deaths Today</h1> <h2 id="deathsToday">521</h1></div>
+            <div><h1>Cumulative Deaths</h1> <h2 id="cumDeaths">125,521</h2></div>
+            
+        </div>
+        <div class= "third">
+            <div><h1>Recovered Today</h1> <h2 id="recoveredToday">5221</h1></div>
+            <div><h1>Recovered Total</h1> <h2 id="recovered">125,521</h2></div>
+        </div>
+    </div>
+    <script>
+        const casesToday = document.getElementById("casesToday");
+        const activeCases = document.getElementById("activeCases");
+        const cumCases = document.getElementById("cumCases");
+        const deathsToday = document.getElementById("deathsToday");
+        const cumDeaths = document.getElementById("cumDeaths");
+        const recoveredToday = document.getElementById("recoveredToday");
+        const recovered = document.getElementById("recovered");
+        const info = document.getElementById("infom");
+
+        function getData() {
+            let locationInput = document.getElementById("location").value;
+            let dateInput = document.getElementById("date").value;
+            fetch(`https://api.opencovid.ca/summary?loc=${locationInput}&date=${dateInput}`)
+            .then(response => response.json())
+            .then(data => {
+                casesToday.innerHTML = data.summary[0].cases;
+                activeCases.innerHTML = data.summary[0].active_cases;
+                cumCases.innerHTML = data.summary[0].cumulative_cases;
+                deathsToday.innerHTML = data.summary[0].deaths;
+                cumDeaths.innerHTML = data.summary[0].cumulative_deaths;
+                recoveredToday.innerHTML = data.summary[0].recovered;
+                recovered.innerHTML = data.summary[0].cumulative_recovered;
+
+                let location = data.summary[0].province;
+                let date = data.summary[0].date;
+                info.innerHTML = ("COVID Info on " + location + " as of " + date);
+            })
+            .catch(error => console.log("Error:", error))
+            
+        }
+
+    
+    </script>
+
+</body>
+</html>
+
+<!--<h1>Cumulative Cases</h1> <h1>Active Cases</h1> <h2>123,456</h1> --> 
